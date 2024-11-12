@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="level7.css">
+</head>
+
+<body>
+    <h1 id="scoreElement">Score:</h1>
+    <div id="Player"></div>
+    <div id="Enemy"></div>
+    <div id="Bullet"></div>
+
+    <script>
+        let Player = document.getElementById("Player");
+        let Enemy = document.getElementById("Enemy");
+        let Bullet = document.getElementById("Bullet");
+        let scoreElement = document.getElementById("scoreElement");
+        let score = 0;
+        let positionX = 0;
+        let positionY = 0;
+        let posXbullet = Math.random() * (window.innerWidth - 10);
+        let posYbullet = Math.random() * (window.innerHeight - 10);
+        let velocityX = 11; // מהירות ב-X
+        let velocityY = 11; // מהירות ב-Y
+
+        function MoveBullet() {
+            posXbullet += velocityX;
+            posYbullet += velocityY;
+            // בדוק אם הכדור פוגע בקירות
+            if (posXbullet <= 0 || posXbullet >= window.innerWidth - 10) {
+                velocityX *= -1; // הפוך כיוון
+                addScore();
+            }
+            if (posYbullet <= 0 || posYbullet >= window.innerHeight - 10) {
+                velocityY *= -1; // הפוך כיוון
+                addScore();
+            }
+
+            // עדכון מיקום הכדור
+            Bullet.style.left = `${posXbullet}px`;
+            Bullet.style.top = `${posYbullet}px`;
+        }
+
+        function UpdatePosPlayer() {
+            Player.style.left = `${positionX}px`;
+            Player.style.top = `${positionY}px`;
+        }
+
+
+        window.addEventListener("keydown", check);
+
+        function check(info) {
+            const playerWidth = 160; // עדכון לרוחב השחקן
+            const playerHeight = 200; // עדכון לגובה השחקן
+            const containerWidth = window.innerWidth;
+            const containerHeight = window.innerHeight;
+            if (info.key === "d" || info.key === "D") {
+                if (positionX + playerWidth < containerWidth) {
+                    positionX += 35;
+                    Player.style.backgroundImage = "url('spongbobRun.png')";
+                    Player.style.backgroundSize = "cover"
+                    Player.style.width = "179px"
+                    Player.style.height = "170px"
+                }
+            } else if (info.key === "a" || info.key === "A") {
+                if (positionX > 0) {
+                    positionX -= 35;
+                    Player.style.backgroundImage = "url('spongbobRun.png')";
+                    Player.style.backgroundSize = "cover"
+                    Player.style.width = "179px"
+                    Player.style.height = "170px"
+                }
+            } else if (info.key === "w" || info.key === "W") {
+                if (positionY > 0) {
+                    positionY -= 35;
+                    Player.style.backgroundImage = "url('spongbobRun.png')";
+                    Player.style.backgroundSize = "cover"
+                    Player.style.width = "179px"
+                    Player.style.height = "170px"
+                }
+            } else if (info.key === "s" || info.key === "S") {
+                if (positionY + playerHeight < containerHeight) {
+                    positionY += 35;
+                    Player.style.backgroundImage = "url('spongbobRun.png')";
+                    Player.style.backgroundSize = "cover"
+                    Player.style.width = "179px"
+                    Player.style.height = "170px"
+                }
+            }
+
+            UpdatePosPlayer();
+        }
+
+        function addScore() {
+            scoreElement.innerHTML = "Score:" + score;
+            score++;
+        }
+
+        function Next() {
+            window.location = "level8.html"
+        }
+
+        function checkElementOverLapBullet() {
+            if (elementsOverlapBullet(Player, Bullet)) {
+                const PlayerRect = Player.getBoundingClientRect();
+                const BulletRect = Bullet.getBoundingClientRect();
+
+                const overlapLeft = BulletRect.right - PlayerRect.left;
+                const overlapRight = PlayerRect.right - BulletRect.left;
+                const overlapTop = BulletRect.bottom - PlayerRect.top;
+                const overlapBottom = PlayerRect.bottom - BulletRect.top;
+
+                const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
+                document.body.innerHTML = `
+                <h1>Game Over</h1>
+           <div class="btnOver" onclick="Next()">
+                    <br>
+                     Next
+                     <br>
+                    </div>
+            `
+            }
+
+        }
+
+        function checkElementOverLapEnemy() {
+            if (elementsOverlapEnemy(Player, Enemy)) {
+                const PlayerRect = Player.getBoundingClientRect();
+                const EnemyRect = Enemy.getBoundingClientRect();
+
+                const overlapLeft = EnemyRect.right - PlayerRect.left;
+                const overlapRight = PlayerRect.right - EnemyRect.left;
+                const overlapTop = EnemyRect.bottom - PlayerRect.top;
+                const overlapBottom = PlayerRect.bottom - EnemyRect.top;
+
+                const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
+                document.body.innerHTML = ` 
+                    <h1>Game Over</h1> 
+              <div class="btnOver" onclick="Next()">
+                    <br>
+                     Next
+                     <br>
+                    </div>
+                    `
+            }
+        }
+
+
+        function elementsOverlapBullet(Player, Enemy) {
+            const domRect1 = Player.getBoundingClientRect();
+            const domRect2 = Enemy.getBoundingClientRect();
+
+            return !(
+                domRect1.top > domRect2.bottom ||
+                domRect1.right < domRect2.left ||
+                domRect1.bottom < domRect2.top ||
+                domRect1.left > domRect2.right
+            );
+        }
+
+        function elementsOverlapEnemy(Player, Enemy) {
+            const domRect1 = Player.getBoundingClientRect();
+            const domRect2 = Enemy.getBoundingClientRect();
+
+            return !(
+                domRect1.top > domRect2.bottom ||
+                domRect1.right < domRect2.left ||
+                domRect1.bottom < domRect2.top ||
+                domRect1.left > domRect2.right
+            );
+        }
+
+        let checkelementoverlapBullet = setInterval(checkElementOverLapBullet, 100);
+        let checkelementoverlapEnemy = setInterval(checkElementOverLapEnemy, 100);
+        setInterval(MoveBullet, 16);
+    </script>
+</body>
+
+</html>

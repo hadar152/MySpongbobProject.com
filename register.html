@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>register</title>
+    <link rel="stylesheet" href="register.css">
+</head>
+
+<body dir="rtl">
+
+    <div class="wrapper">
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <h1> דף הרשמה </h1>
+        <br>
+        <input type="text" placeholder="מה שמך ?" id="FullName">
+        <br><br>
+        <input type="text" placeholder="הכנס שם משתמש " id="UserName">
+        <br><br>
+        <input type="email" id="Email" placeholder="הכנס אימייל" pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$" required>
+        <br><br>
+        <input type="password" placeholder=" הכנס סיסמא " id="Password">
+        <br><br>
+        <b id="error"></b>
+        <br><br>
+        <button onclick="submit()">הירשם</button>
+    </div>
+
+    <script>
+        function Next() {
+            window.location = "login.html"
+        }
+
+        function submit() {
+            let fullName = document.getElementById("FullName").value;
+            let userName = document.getElementById("UserName").value;
+            let password = document.getElementById("Password").value;
+            let email = document.getElementById("Email").value;
+            let error = document.getElementById("error");
+
+            if (!fullName || !userName || !password || !email) {
+                error.textContent = "נא למלא את כל השדות.";
+                return;
+            }
+
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // Simple email regex
+            if (!emailRegex.test(email)) {
+                error.textContent = "המייל הזה לא תקין! ודא שהוא כתוב בצורה נכונה.";
+                return;
+            }
+
+            // If all validations pass
+            localStorage.setItem("FullName", fullName);
+            localStorage.setItem("UserName", userName);
+            localStorage.setItem("Password", password);
+            localStorage.setItem("Email", email);
+            Next();
+        }
+    </script>
+
+</body>
+
+</html>

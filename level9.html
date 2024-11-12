@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="level9.css">
+</head>
+
+<body dir="rtl">
+    <div class="wrapper">
+        <h1>what character are you</h1>
+        <input type="text" placeholder="what's your name" id="firstName"><b class="errorB"></b>
+        <br>
+        <input type="text" placeholder="what's your lastName" id="lastName"><b class="errorB"></b>
+        <br>
+        <input type="text" placeholder="what are your hobbies" id="hobby"><b class="errorB"></b>
+        <br>
+        <input type="text" placeholder="how old are you" id="age"><b class="errorB"></b>
+        <br><br>
+        <button id="resultButton">result</button>
+        <br><br>
+        <img id="img" alt="">
+        <br><br>
+        <h1 id="error"></h1>
+        <br><br>
+        <button onclick="Next()">Skip</button>
+    </div>
+    <script>
+        let img = document.getElementById("img");
+        let errorA = document.getElementById("error");
+        let firstName = document.getElementById("firstName");
+        let lastName = document.getElementById("lastName");
+        let errorB = document.getElementsByClassName("errorB");
+        let hobby = document.getElementById("hobby");
+        let age = document.getElementById("age");
+        let resultButton = document.getElementById("resultButton");
+        let imgResult = false;
+        let imgs = [
+            "petrick1.webp",
+            "sandi.png",
+            "spongebob.png",
+            "mar krabs.png"
+        ];
+
+        function Next() {
+            window.location = "level10.html"
+        }
+
+        function checkInputs() {
+            let isValid = true;
+
+            if (firstName.value === "") {
+                errorA.textContent = "Please fill out the form!";
+                errorB[0].textContent = "! ";
+                errorB[0].classList.add("now");
+                isValid = false;
+            } else if (firstName != "") {
+                errorB[0].textContent = " ";
+                errorB[0].classList.add("now");
+            }
+
+            if (lastName.value === "") {
+                errorA.textContent = "Please fill out the form!";
+                errorB[1].textContent = "!";
+                errorB[1].classList.add("now");
+                isValid = false;
+            } else if (lastName != "") {
+                errorB[1].textContent = "";
+                errorB[1].classList.add("now");
+            }
+
+            if (age.value === "") {
+                errorA.textContent = "Please fill out the form!";
+                errorB[3].textContent = "! ";
+                errorB[3].classList.add("now");
+                isValid = false;
+            } else if (age != "") {
+                errorB[3].textContent = "";
+                errorB[3].classList.add("now");
+            }
+
+            if (hobby.value === "") {
+                errorA.textContent = "Please fill out the form!";
+                errorB[2].textContent = "!";
+                errorB[2].classList.add("now");
+                isValid = false;
+            } else if (hobby != "") {
+                errorB[2].textContent = "";
+                errorB[2].classList.add("now");
+            }
+
+            if (isValid) {
+                errorA.textContent = " "; // לנקות את ההודעה
+            }
+            return isValid; // כל השדות מולאו
+        }
+
+
+
+        resultButton.addEventListener('click', function() {
+            if (!checkInputs()) return; // אם השדות לא מולאו, אל תמשיך
+
+            if (imgResult) return; // תצא מהפונקציה אם כבר לחצו פעם אחת
+
+            imgResult = true;
+            img.classList.add("anime");
+
+            // הפוך את הכפתור ללא זמין
+            resultButton.disabled = true;
+
+            setTimeout(removeAnimation, 5000);
+        });
+
+        function removeAnimation() {
+            img.classList.remove("anime");
+            let num = getRandom(0, imgs.length - 1);
+            img.src = imgs[num];
+        }
+
+        function getRandom(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+    </script>
+</body>
+
+</html>

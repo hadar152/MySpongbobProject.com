@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body dir="rtl">
+
+    <div class="wrapper">
+        <h1> דף התחברות </h1>
+        <div>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+
+        <form id="loginForm" onsubmit="return false;">
+            <input type="text" id="UserName" placeholder="הכנס שם משתמש" required>
+            <br><br>
+
+            <input type="password" id="Password" placeholder="הכנס סיסמא" required>
+            <br><br>
+
+            <input type="email" id="Email" placeholder="הכנס אימייל" pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$" required>
+            <br><br>
+
+            <button onclick="login()">התחבר</button>
+            <br><br><br>
+            <b id="error" style="color: rgb(0, 0, 0);"></b>
+            <br><br>
+            <button onclick="register()">הירשם</button>
+        </form>
+    </div>
+
+    <script>
+        function register() {
+            window.location = "register.html";
+        }
+
+        function login() {
+            let userName = document.getElementById("UserName").value;
+            let password = document.getElementById("Password").value;
+            let email = document.getElementById("Email").value;
+            let userLocal = localStorage.getItem("UserName");
+            let passwordLocal = localStorage.getItem("Password");
+            let emailLocal = localStorage.getItem("Email");
+            let error = document.getElementById("error");
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+            error.textContent = "";
+
+            if (userName === userLocal && password === passwordLocal && email === emailLocal && emailRegex.test(email)) {
+                alert("הפרטים נכונים!");
+                window.location = "level1.html";
+            } else if (!emailRegex.test(email)) {
+                error.textContent = "המייל הזה לא תקין! ודא שהמייל שלך הוא גימייל חוקי.";
+            } else {
+                error.textContent = "הפרטים לא נכונים או שלא מילתה פרטים!";
+            }
+        }
+    </script>
+
+</body>
+
+</html>

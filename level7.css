@@ -1,0 +1,70 @@
+body {
+    overflow: hidden;
+    margin: 0;
+    height: 100vh;
+    background: url("bacroundGame.webp");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#Player {
+    position: absolute;
+    width: 160px;
+    height: 210px;
+    background-image: url("SpongbobScari.png");
+    background-size: cover;
+    bottom: 31px;
+}
+
+#Enemy {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    right: 0;
+    background-image: url("Plankton.png");
+    background-size: cover;
+    animation-name: animeEnemy;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+#Bullet {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background-image: url("KrabiPatty.png");
+    background-size: cover;
+    border-radius: 50%;
+}
+
+.btnOver {
+    display: block;
+    margin: 0 auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background: url("bubbles.png");
+    background-size: 50px;
+    height: 50px;
+    width: 70px;
+    text-align: center;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    color: white;
+    font-size: 40px;
+    font-family: cursive;
+}
+
+@keyframes animeEnemy {
+    0% {
+        background-image: url("");
+    }
+    100% {
+        background-image: url("Plankton.png");
+    }
+}

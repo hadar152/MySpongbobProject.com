@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="end.css">
+</head>
+
+<body>
+    <h1 id="ScoreEnd">Your final point total is</h1>
+    <h1>Thanks for playing my game!</h1>
+    <h1>To Restart The Game Click On The Medusa</h1>
+    <br><br>
+    <div class="btnOver" onclick="Restart()"></div>
+
+
+    <img id="Petrick_Img" src="https://www.nickelodeonadventure.co.uk/wp-content/uploads/2017/10/personajes.png" alt="">
+    <script>
+        let ScoreLevel1 = parseInt(localStorage.getItem("ScoreLevel1")) || 0;
+        let ScoreLevel2 = parseInt(localStorage.getItem("ScoreLevel2")) || 0;
+        let ScoreLevel3 = parseInt(localStorage.getItem("ScoreLevel3")) || 0;
+        let ScoreLevel4 = parseInt(localStorage.getItem("ScoreLevel4")) || 0;
+        let ScoreLevel6 = parseInt(localStorage.getItem("ScoreLevel6")) || 0;
+        let ScoreLevel8 = parseInt(localStorage.getItem("ScoreLevel8")) || 0;
+        // let ScoreLevel10 = parseInt(localStorage.getItem("ScoreLevel10")) || 0;
+
+        function Restart() {
+            window.location = "level1.html"
+        }
+        let totalScore = ScoreLevel1 + ScoreLevel2 + ScoreLevel3 + ScoreLevel4 + ScoreLevel6 + ScoreLevel8; //ScoreLevel10
+        let ScoreEnd = document.getElementById("ScoreEnd");
+        ScoreEnd.textContent = "Your final score total is - " + totalScore;
+    </script>
+</body>
+
+</html>

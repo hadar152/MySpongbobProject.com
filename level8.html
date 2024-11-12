@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petrick Game Level 3</title>
+    <link rel="stylesheet" href="level8.css">
+</head>
+
+<body>
+    <h1>Your Petrick score: <span id="score">0</span></h1>
+    <h1>Time: <b id="time">60</b></h1>
+    <div class="wrapper">
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+        <div><span class="dot"></span></div>
+    </div>
+    <div id="player"></div>
+    <div id="enemy"></div>
+
+
+
+    <script>
+        let player = document.getElementById('player');
+        let enemy = document.getElementById('enemy');
+        let positionX = 100;
+        let positionY = 100;
+        let timeElement = document.getElementById('time');
+        let timeLeft = 60;
+        let gameInterval;
+        let scoreElement = document.getElementById('score');
+        let score = 0;
+        let sound = new Audio("foodPetrick.wav")
+        addEventListener("keydown", checkKey);
+
+        function Next() {
+            window.location = "level9.html"
+        }
+
+        function timer() {
+            timeLeft--;
+            timeElement.innerHTML = "" + timeLeft;
+            if (timeLeft === 0 && score < 50) {
+                player.remove()
+                sound = new Audio("")
+                localStorage.setItem("ScoreLevel8", score)
+                document.body.innerHTML = `
+                <div id="endDiv">
+                <p id="over">The game is over</p>
+                <p id="endScore">Your Score:${score}</p>
+                <div class="btnOver" onclick="Next()">
+                    <br>
+                     Next
+                     <br>
+                    </div>
+                </div>
+                `
+            } else if (score > 50 && timeLeft === 0) {
+                player.remove()
+                petrickKrebbyPatty = new Audio("")
+                localStorage.setItem("ScoreLevel3", score)
+                document.body.innerHTML = `
+                <div id="endDiv"> 
+                <p id="overGood">The game is over</p>
+                <p id="endScore">Your Score:${score}!</p>
+                 <div class="btnOver" onclick="Next()">
+                    <br>
+                    Next
+                    <br>
+                    </div> 
+                </div>
+                `
+            }
+        }
+
+        function updatePosition() {
+            player.style.left = `${positionX}px`;
+            player.style.bottom = `${positionY}px`;
+        }
+
+
+        function moveEnemy() {
+            const x = Math.floor(Math.random() * (window.innerWidth - 120));
+            const y = Math.floor(Math.random() * (window.innerHeight - 120));
+            enemy.style.left = `${x}px`;
+            enemy.style.top = `${y}px`;
+        }
+
+        function initMoveEnemy() {
+            moveEnemy();
+            setInterval(moveEnemy, 1500);
+        }
+
+        function checkRemoveEnemy() {
+            if (elementsOverlap(player, enemy)) {
+                moveEnemy();
+                sound.play()
+                score += 5;
+                scoreElement.innerHTML = score;
+            }
+        }
+
+        function elementsOverlap(player, enemy) {
+            const domRect1 = player.getBoundingClientRect();
+            const domRect2 = enemy.getBoundingClientRect();
+            return !(
+                domRect1.top > domRect2.bottom ||
+                domRect1.right < domRect2.left ||
+                domRect1.bottom < domRect2.top ||
+                domRect1.left > domRect2.right
+            );
+        }
+
+        function checkKey(info) {
+            const playerWidth = 120;
+            const playerHeight = 120;
+            const containerWidth = window.innerWidth;
+            const containerHeight = window.innerHeight;
+
+            if (info.key === "d" || info.key === "D") {
+                if (positionX + playerWidth < containerWidth) {
+                    positionX += 25;
+                }
+            } else if (info.key === "a" || info.key === "A") {
+                if (positionX > 0) {
+                    positionX -= 25;
+                }
+            }
+            if (info.key === "w" || info.key === "W") {
+                if (positionY + playerHeight < containerHeight) {
+                    positionY += 25;
+                }
+            } else if (info.key === "s" || info.key === "S") {
+                if (positionY > 0) {
+                    positionY -= 25;
+                }
+            }
+
+            updatePosition();
+            checkRemoveEnemy();
+        }
+
+        gameInterval = setInterval(timer, 200);
+    </script>
+</body>
+
+</html>

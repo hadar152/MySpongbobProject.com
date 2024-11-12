@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Balloons</title>
+    <link rel="stylesheet" href="level10.css">
+</head>
+
+<body>
+    <h1>Your score: <span id="score">0</span></h1>
+    <h1 id="BalloonTime">Change Balloon: 0</h1>
+    <h1>Time: <b id="time">60</b></h1>
+    <h1>The Balloon You Need To Collect</h1>
+    <img id="currentBalloon" width="160px" height="190px" src="" alt="בלון">
+    <div id="player"></div>
+    <div id="container"></div>
+
+    <script>
+        let container = document.getElementById('container');
+        let timeElement = document.getElementById('time');
+        let timeLeft = 60;
+        let timeBalloonElement = document.getElementById('BalloonTime');
+        let BalloonTimeLeft = 6;
+        let player = document.getElementById('player');
+        let scoreElement = document.getElementById('score');
+        let score = 0;
+        let s = new Audio("BalloonSound.wav")
+        let balloons = [];
+        let positionX = 100;
+        let positionY = 100;
+        let currentBalloon = "";
+        let isGameActive = true; // דגל שמציין אם המשחק פעיל
+        let balloonsImages = [
+            "https://cdn.ecommercedns.uk/files/0/258040/4/37381804/pearl-sapphire-blue-11-latex-balloon.png",
+            "https://www.instaballoons.com/cdn/shop/files/53537_silkarcticblue1200x1200.png?v=1720753837",
+            "https://www.instaballoons.com/cdn/shop/files/silk-cool-mint-green-24-inch-latex-balloons-instaballoons.png?v=1720754897",
+            "https://www.instaballoons.com/cdn/shop/products/tuftex-latex-turquoise-24-latex-balloons-3-count-29378220982361.png?v=1649829485",
+            "https://cdn.ecommercedns.uk/files/0/258040/3/37381733/pearl-quartz-purple-11-latex-balloon.png",
+            "https://cdn.ecommercedns.uk/files/0/258040/3/37381563/pearl-madarin-orange-11-latex-balloon.png",
+        ];
+
+        let currentBalloonIndex = 0;
+
+        function BalloonTimeLeftFunction() {
+            if (!isGameActive) return;
+            BalloonTimeLeft--;
+            timeBalloonElement.innerHTML = "Change Balloon: " + BalloonTimeLeft;
+            if (BalloonTimeLeft <= 0) {
+                updateCurrentBalloon();
+                BalloonTimeLeft = 6;
+            }
+        }
+
+        setInterval(BalloonTimeLeftFunction, 1000);
+
+        function updateCurrentBalloon() {
+            currentBalloonIndex = getRandom(0, balloonsImages.length - 1);
+            currentBalloon = balloonsImages[currentBalloonIndex];
+            document.getElementById('currentBalloon').src = currentBalloon;
+        }
+
+        function timer() {
+            if (!isGameActive) return; // אם המשחק לא פעיל, לא עושים שום דבר
+            timeLeft--;
+            timeElement.innerHTML = "" + timeLeft;
+            if (timeLeft === 0) {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            s.play();
+            isGameActive = false; // עוצר את המשחק
+            player.remove();
+            container.remove();
+            localStorage.setItem("ScoreLevel10", score);
+            document.body.innerHTML = `
+                <div id="endDiv">
+                    <p id="over">The game is over</p>
+                    <p id="endScore">Your Score: ${score}</p>
+                    <div class="btnOver" onclick="window.location = 'end.html'">
+                        <br>Next<br>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showBalloon() {
+            const balloon = document.createElement('img');
+            balloon.className = 'balloon';
+            balloon.src = balloonsImages[getRandom(0, balloonsImages.length - 1)];
+            balloon.style.position = 'absolute';
+            balloon.style.left = `${getRandom(0, 95)}%`;
+            balloon.style.top = `${getRandom(0, 95)}%`;
+            balloon.style.width = '50px';
+            balloon.style.height = '50px';
+            container.appendChild(balloon);
+            balloons.push(balloon);
+        }
+
+        function check() {
+            if (!isGameActive) return; // אם המשחק לא פעיל, לא עושים שום דבר
+            balloons.forEach((balloon) => {
+                if (elementsOverlap(player, balloon)) {
+                    if (balloon.getAttribute('src') === currentBalloon) {
+                        s.play();
+                        score += 5;
+                        scoreElement.innerHTML = score;
+                        balloon.remove();
+                        balloons = balloons.filter(b => b !== balloon);
+                    } else {
+                        endGame(); // מפסיק את המשחק אם הבלון לא תואם
+                    }
+                }
+            });
+        }
+
+        addEventListener("keydown", checkKey);
+
+        function checkKey(info) {
+            const playerWidth = 120;
+            const playerHeight = 120;
+            const containerWidth = window.innerWidth;
+            const containerHeight = window.innerHeight;
+            if (info.key === "d" || info.key === "D") {
+                if (positionX + playerWidth < containerWidth) {
+                    positionX += 25;
+                }
+            } else if (info.key === "a" || info.key === "A") {
+                if (positionX > 0) {
+                    positionX -= 25;
+                }
+            } else if (info.key === "w" || info.key === "W") {
+                if (positionY > 0) {
+                    positionY -= 25;
+                }
+            } else if (info.key === "s" || info.key === "S") {
+                if (positionY + playerHeight < containerHeight) {
+                    positionY += 25;
+                }
+            }
+
+            updatePosition();
+            check();
+        }
+
+        function updatePosition() {
+            player.style.left = `${positionX}px`;
+            player.style.top = `${positionY}px`;
+        }
+
+        function elementsOverlap(player, balloon) {
+            const domRect1 = player.getBoundingClientRect();
+            const domRect2 = balloon.getBoundingClientRect();
+
+            return !(
+                domRect1.top > domRect2.bottom ||
+                domRect1.right < domRect2.left ||
+                domRect1.bottom < domRect2.top ||
+                domRect1.left > domRect2.right
+            );
+        }
+
+        function refreshBalloons() {
+            balloons.forEach(balloon => {
+                balloon.remove();
+            });
+            balloons = [];
+
+            for (let i = 0; i < 5; i++) {
+                showBalloon();
+            }
+        }
+
+        function getRandom(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        refreshBalloons();
+        setInterval(refreshBalloons, 6000);
+        setInterval(check, 100);
+        setInterval(timer, 1000);
+        updateCurrentBalloon();
+    </script>
+</body>
+
+</html>
